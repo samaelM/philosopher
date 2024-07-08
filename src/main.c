@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:36 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/05 19:41:04 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/07/08 17:26:42 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,9 +127,9 @@ void	*ft_philo(void *arg)
 	data = info->data;
 	philo = data->tab_philo[info->idx];
 	philo->id = info->idx;
-	data->tab_philo[info->idx]->nb_meal = 0;
-	ft_put_pthread(philo->thid);
-	printf("\n");
+	philo->nb_meal = 0;
+	// ft_put_pthread(philo->thid);
+	// printf("\n");
 	if ((ret = (char *)malloc(20)) == NULL)
 	{
 		perror("malloc() error");
@@ -140,8 +140,13 @@ void	*ft_philo(void *arg)
 	{
 		printf("%ld %d is thinking\n", ft_get_time_ms(data), philo->id);
 		ft_eat(data, philo->id);
+		printf("%d has eaten %d time (max=%d)\n", philo->id, philo->nb_meal, data->nb_eat_max);
+		printf("%d\n", data->nb_eat_max == philo->nb_meal);
 		if (data->nb_eat_max == philo->nb_meal)
+		{
+			printf("BREAAAAKKKKKK %d\n", philo->id);
 			break ;
+		}
 		printf("%ld %d is sleeping\n", ft_get_time_ms(data), philo->id);
 		usleep(data->time_sleep);
 	}
@@ -174,7 +179,7 @@ int	main(int ac, char **av)
 			perror("pthread_create() error");
 			exit(1);
 		}
-		usleep(100000);
+		// usleep(10);
 		i++;
 	}
 	gettimeofday(&data->time, NULL);
@@ -195,5 +200,5 @@ int	main(int ac, char **av)
 		printf("thread exited with '%s'\n", (char *)ret);
 		i++;
 	}
-	return (1);
+	return (0);
 }
