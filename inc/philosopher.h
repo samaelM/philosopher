@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:32 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/05 19:36:34 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:54:51 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ typedef struct s_philo
 	// rajouter une var pour savoir si il est en vie et ptet aussi pour voir si il a tout manger
 {
 	int id;
+	int is_setup;
+	int is_alive;
 	pthread_t thid;
 	long last_meal_ms;
 	int nb_meal;
