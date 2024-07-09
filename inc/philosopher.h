@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:32 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/09 18:30:00 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/07/09 18:47:16 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct s_philo
 	int				is_setup;
 	int				is_alive;
 	pthread_t		thid;
-	unsigned int	last_meal_ms;
+	long			last_meal_ms;
 	int				nb_meal;
 }					t_philo;
 
@@ -49,7 +49,7 @@ typedef struct s_thread_info
 void				ft_wait_setup(t_data *data);
 void				ft_wait_start(int *start);
 void				ft_wait_death(t_data *data);
-unsigned int		ft_get_time_ms(t_data *data);
+long				ft_get_time_ms(t_data *data);
 void				*ft_philo(void *arg);
 void				ft_wait_threads(t_data *data);
 int					ft_create_threads(t_data *data);

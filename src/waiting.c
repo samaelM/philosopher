@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:43:17 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/09 18:31:08 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/07/09 19:07:28 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	ft_wait_setup(t_data *data)
 		else
 			i++;
 	}
+	data->is_started = 1;
 }
 
 void	ft_wait_start(int *start)
