@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:59:28 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/09 18:12:27 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/07/09 18:33:08 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	*ft_philo(void *arg)
 		ft_eat(data, philo->id);
 		if (data->nb_eat_max == philo->nb_meal)
 		{
-			printf("break id %d\n", philo->id);
 			philo->is_alive = -1;
 			break ;
 		}
@@ -61,4 +60,29 @@ void	*ft_philo(void *arg)
 	}
 	ret = ft_itoa(philo->id);
 	pthread_exit(ret);
+}
+
+int	ft_create_threads(t_data *data)
+{
+	int		i;
+	t_ti	*info;
+
+	i = 0;
+	while (i < data->nb_philo)
+	{
+		data->tab_philo[i] = malloc(sizeof(t_philo));
+		data->tab_philo[i]->nb_meal = 0;
+		info = malloc(sizeof(t_ti));
+		info->data = data;
+		info->idx = i;
+		data->tab_philo[i]->is_setup = 0;
+		if (pthread_create(&data->tab_philo[i]->thid, NULL, ft_philo,
+				info) != 0)
+		{
+			perror("pthread_create() error");
+			exit(1);
+		}
+		i++;
+	}
+	return (1);
 }

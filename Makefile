@@ -42,7 +42,10 @@ LIBFT		=	libft.a
 ###########################
 
 CFLAGS		=	-Wall -Wextra -Werror
-ADDFALGS	=	-Wconversion -Wdouble-promotion -Wno-unused-parameter -Wno-unused-function -Wno-sign-conversion -fsanitize=undefined -fsanitize-trap -g3 -O0 -Wfatal-errors -Wno-unused-variable -W -Wwrite-strings -Wstrict-prototypes -Wmissing-declarations -ffast-math -Wno-missing-declarations
+ADDFALGS	=	-Wconversion -Wdouble-promotion -Wno-unused-parameter -Wno-unused-function \
+				-Wno-sign-conversion -fsanitize=undefined -fsanitize-trap -g3 -O0 -Wfatal-errors \
+				-Wno-unused-variable -W -Wwrite-strings -Wstrict-prototypes -Wmissing-declarations \
+				-ffast-math -Wno-missing-declarations
 
 ###########################
 ######     RULES     ######

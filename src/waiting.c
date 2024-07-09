@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:43:17 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/09 18:02:22 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/07/09 18:31:08 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	ft_wait_start(int *start)
 	while (*start == 0)
 		;
 }
+// regarde si tout les philo sont en vie,
+// doit contenir un mutex pour dieu sais quel raison
 
 void	ft_wait_death(t_data *data)
 {
@@ -59,8 +61,6 @@ void	ft_wait_death(t_data *data)
 			data->tab_philo[i]->is_alive = 0;
 			nb_dead++;
 			printf("moooooooort%d\n", i);
-				// regarde si tout les philo sont en vie,
-				// doit contenir un mutex pour dieu sais quel raison
 		}
 		if (i == data->nb_philo - 1)
 			i = 0;
@@ -68,4 +68,22 @@ void	ft_wait_death(t_data *data)
 			i++;
 	}
 	printf("ayoooooooooooooooooooooooooooo");
+}
+
+void	ft_wait_threads(t_data *data)
+{
+	void	*ret;
+	int		i;
+
+	i = 0;
+	while (i < data->nb_philo)
+	{
+		if (pthread_join(data->tab_philo[i]->thid, &ret) != 0)
+		{
+			perror("pthread_create() error");
+			exit(3);
+		}
+		printf("thread exited with '%s'\n", (char *)ret);
+		i++;
+	}
 }
