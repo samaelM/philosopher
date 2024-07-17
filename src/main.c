@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:36 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/09 19:07:19 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:42:17 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	ft_init_mutex(t_data *data)
 	}
 }
 
-static t_data	*ft_init(t_data *data,int ac, char **av)
+static t_data	*ft_init(t_data *data, int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
 		return (NULL);
@@ -39,7 +39,7 @@ static t_data	*ft_init(t_data *data,int ac, char **av)
 	data->time_sleep = ft_atoi(av[4]) * 1000;
 	data->tab_philo = malloc(data->nb_philo * sizeof(t_philo *));
 	if (!data->tab_philo)
-		return ( NULL);
+		return (NULL);
 	data->tab_fork = malloc(sizeof(pthread_mutex_t) * data->nb_philo);
 	if (!data->tab_fork)
 		return (free(data->tab_philo), NULL);
@@ -47,15 +47,29 @@ static t_data	*ft_init(t_data *data,int ac, char **av)
 	return (data);
 }
 
+void	ft_free_data(t_data *data)
+{
+	int	i;
+
+	free(data->tab_fork);
+	i = 0;
+	while (i < data->nb_philo)
+	{
+		free(data->tab_philo[i]);
+		i++;
+	}
+	free(data->tab_philo);
+}
+
 int	main(int ac, char **av)
 {
 	t_data	data;
 
-	ft_init(&data,ac, av);
+	ft_init(&data, ac, av);
 	ft_create_threads(&data);
-	gettimeofday(&data.time, NULL);
 	ft_wait_setup(&data);
 	ft_wait_death(&data);
 	ft_wait_threads(&data);
+	ft_free_data(&data);
 	return (0);
 }

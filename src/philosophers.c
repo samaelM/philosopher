@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:59:28 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/09 19:11:19 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:49:51 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,24 @@
 
 static int	ft_eat(t_data *data, int idx)
 {
-	int	left;
-	int	right;
+	t_philo	*philo;
 
-	left = idx;
-	right = idx + 1;
-	if (idx == data->nb_philo - 1)
-		right = 0;
-	pthread_mutex_lock(&data->tab_fork[left]);
-	pthread_mutex_lock(&data->tab_fork[right]);
+	philo = data->tab_philo[idx];
+	pthread_mutex_lock(&data->tab_fork[philo->f_left]);
+	ft_print_routine(data, idx, "has taken a fork\n");
+	pthread_mutex_lock(&data->tab_fork[philo->f_right]);
+	ft_print_routine(data, idx, "has taken a fork\n");
+	ft_print_routine(data, idx, "is eating\n");
 	data->tab_philo[idx]->last_meal_ms = ft_get_time_ms(data);
 	data->tab_philo[idx]->nb_meal++;
-	printf("%ld %d is eating\n", ft_get_time_ms(data), idx);
 	usleep(data->time_eat);
-	pthread_mutex_unlock(&data->tab_fork[left]);
-	pthread_mutex_unlock(&data->tab_fork[right]);
+	pthread_mutex_unlock(&data->tab_fork[philo->f_left]);
+	pthread_mutex_unlock(&data->tab_fork[philo->f_right]);
 	return (1);
 }
 
-void	*ft_philo(void *arg)
+static int	ft_philo_init(t_philo *arg)
 {
-	char	*ret;
 	t_data	*data;
 	t_philo	*philo;
 
@@ -42,24 +39,42 @@ void	*ft_philo(void *arg)
 	philo = data->tab_philo[((t_ti *)arg)->idx];
 	philo->id = ((t_ti *)arg)->idx;
 	philo->is_alive = 1;
+	pthread_mutex_init(&philo->m_alive, NULL);
+	philo->f_left = philo->id;
+	philo->f_right = philo->id + 1;
+	if (philo->id == data->nb_philo - 1)
+		philo->f_right = 0;
+	philo->have_fork = 0;
 	free(arg);
 	philo->is_setup = 1;
-	philo->last_meal_ms = ft_get_time_ms(data);
+	return (1);
+}
+
+void	*ft_philo(void *arg)
+{
+	t_data	*data;
+	t_philo	*philo;
+
+	data = ((t_ti *)arg)->data;
+	philo = data->tab_philo[((t_ti *)arg)->idx];
+	ft_philo_init(arg);
 	ft_wait_start(&data->is_started);
+	if (philo->id & 1)
+		usleep(data->time_die / 2);
 	while (data->is_started && philo->is_alive == 1)
 	{
-		printf("%ld %d is thinking\n", ft_get_time_ms(data), philo->id);
+		ft_print_routine(data, philo->id, "is thinking\n");
 		ft_eat(data, philo->id);
 		if (data->nb_eat_max == philo->nb_meal)
 		{
-			philo->is_alive = -1;
+			printf("WIN ☣☣☣%d\n", philo->id);
+			philo->is_alive = 0;
 			break ;
 		}
-		printf("%ld %d is sleeping\n", ft_get_time_ms(data), philo->id);
+		ft_print_routine(data, philo->id, "is sleeping\n");
 		usleep(data->time_sleep);
 	}
-	ret = ft_itoa(philo->id);
-	pthread_exit(ret);
+	return (NULL);
 }
 
 int	ft_create_threads(t_data *data)
@@ -71,7 +86,7 @@ int	ft_create_threads(t_data *data)
 	while (i < data->nb_philo)
 	{
 		data->tab_philo[i] = malloc(sizeof(t_philo));
-		data->tab_philo[i]->nb_meal = 0;
+		ft_memset(data->tab_philo[i], 0, sizeof(t_philo));
 		info = malloc(sizeof(t_ti));
 		info->data = data;
 		info->idx = i;
