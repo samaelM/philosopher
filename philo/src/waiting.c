@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:43:17 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/17 18:54:43 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/07/17 20:25:59 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,14 @@ void	ft_wait_death(t_data *data)
 	i = 0;
 	while (data->is_started)
 	{
-		if (data->tab_philo[i]->is_alive == 1)
+		if (data->tab_philo[i]->is_alive == 0)
 			break ;
 		else if (ft_get_time_ms(data)
 			- data->tab_philo[i]->last_meal_ms >= data->time_die)
 		{
 			pthread_mutex_lock(&data->tab_philo[i]->m_alive);
 			data->tab_philo[i]->is_alive = 0;
-			printf("%ld %d died diff = %li\n", ft_get_time_ms(data), i,
-				ft_get_time_ms(data) - data->tab_philo[i]->last_meal_ms);
-			if (data->tab_philo[i]->have_fork && printf("unlock fork %d\n",
-					data->tab_philo[i]->id))
-				pthread_mutex_unlock(&data->tab_fork[data->tab_philo[i]->f_left]);
+			printf("%ld %d died\n", ft_get_time_ms(data), i+1);
 			pthread_mutex_unlock(&data->tab_fork[data->tab_philo[i]->f_right]);
 			pthread_mutex_unlock(&data->tab_philo[i]->m_alive);
 			data->is_started = 0;

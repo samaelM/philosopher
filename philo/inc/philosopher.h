@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:32 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/17 18:42:03 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/07/17 20:39:34 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PHILOSOPHER_H
 # include "../lib/libft/libft.h"
 # include <pthread.h>
+#include <unistd.h>
 # include <stdio.h>
 # include <sys/time.h>
 

@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:59:28 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/17 18:49:51 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/05 13:36:51 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	*ft_philo(void *arg)
 		ft_eat(data, philo->id);
 		if (data->nb_eat_max == philo->nb_meal)
 		{
-			printf("WIN ☣☣☣%d\n", philo->id);
+			printf("%ld WIN %d\n", ft_get_time_ms(data), philo->id);
 			philo->is_alive = 0;
 			break ;
 		}

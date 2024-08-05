@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:36 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/17 18:42:17 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:04:20 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,17 @@ static void	ft_init_mutex(t_data *data)
 	}
 }
 
-static t_data	*ft_init(t_data *data, int ac, char **av)
+static int	ft_check_data(t_data *data)
+{
+	return (data->nb_philo > 0 && data->time_die > 0 && data->time_eat > 0
+		&& data->time_sleep > 0);
+}
+
+static int	ft_init(t_data *data, int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
-		return (NULL);
+		return (0);
+	ft_memset(data, 0, sizeof(data));
 	if (ac == 6)
 		data->nb_eat_max = ft_atoi(av[5]);
 	else
@@ -37,14 +44,16 @@ static t_data	*ft_init(t_data *data, int ac, char **av)
 	data->time_die = ft_atoi(av[2]);
 	data->time_eat = ft_atoi(av[3]) * 1000;
 	data->time_sleep = ft_atoi(av[4]) * 1000;
+	if (!ft_check_data(data))
+		return (0);
 	data->tab_philo = malloc(data->nb_philo * sizeof(t_philo *));
 	if (!data->tab_philo)
-		return (NULL);
+		return (0);
 	data->tab_fork = malloc(sizeof(pthread_mutex_t) * data->nb_philo);
 	if (!data->tab_fork)
-		return (free(data->tab_philo), NULL);
+		return (free(data->tab_philo), 0);
 	ft_init_mutex(data);
-	return (data);
+	return (1);
 }
 
 void	ft_free_data(t_data *data)
@@ -65,7 +74,8 @@ int	main(int ac, char **av)
 {
 	t_data	data;
 
-	ft_init(&data, ac, av);
+	if (!ft_init(&data, ac, av))
+		return (write(2, "Error: problem during init\n", 27), 1);
 	ft_create_threads(&data);
 	ft_wait_setup(&data);
 	ft_wait_death(&data);
