@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:36 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/19 16:04:20 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/05 17:44:09 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void	ft_init_mutex(t_data *data)
 		pthread_mutex_init(&data->tab_fork[i], NULL);
 		i++;
 	}
+	pthread_mutex_init(&data->is_started_mutex, NULL);
 }
 
 static int	ft_check_data(t_data *data)

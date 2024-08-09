@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:59:28 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/05 13:36:51 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/07 12:33:13 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,23 @@ void	*ft_philo(void *arg)
 	data = ((t_ti *)arg)->data;
 	philo = data->tab_philo[((t_ti *)arg)->idx];
 	ft_philo_init(arg);
-	ft_wait_start(&data->is_started);
+	ft_wait_start(&data->is_started, &data->is_started_mutex);
 	if (philo->id & 1)
 		usleep(data->time_die / 2);
-	while (data->is_started && philo->is_alive == 1)
+	while (1)
 	{
+		pthread_mutex_lock(&data->is_started_mutex);
+		if (!data->is_started || philo->is_alive != 1)
+		{
+			pthread_mutex_unlock(&data->is_started_mutex);
+			break ;
+		}
+		pthread_mutex_unlock(&data->is_started_mutex);
 		ft_print_routine(data, philo->id, "is thinking\n");
 		ft_eat(data, philo->id);
 		if (data->nb_eat_max == philo->nb_meal)
 		{
-			printf("%ld WIN %d\n", ft_get_time_ms(data), philo->id);
+			printf("%ld %d WIN\n", ft_get_time_ms(data), philo->id);
 			philo->is_alive = 0;
 			break ;
 		}

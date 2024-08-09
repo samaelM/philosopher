@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:32 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/17 20:39:34 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/09 14:57:59 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 # define PHILOSOPHER_H
 # include "../lib/libft/libft.h"
 # include <pthread.h>
-#include <unistd.h>
 # include <stdio.h>
 # include <sys/time.h>
+# include <unistd.h>
 
 typedef struct s_philo
 {
 	int				id;
 	pthread_mutex_t	*tab_fork;
 	int				is_setup;
+	int				is_setup_mutex;
 	pthread_mutex_t	m_alive;
 	int				is_alive;
 	pthread_t		thid;
@@ -44,6 +45,7 @@ typedef struct s_data
 	t_philo			**tab_philo;
 	pthread_mutex_t	*tab_fork;
 	int				is_started;
+	pthread_mutex_t	is_started_mutex;
 }					t_data;
 
 typedef struct s_thread_info
@@ -53,7 +55,7 @@ typedef struct s_thread_info
 }					t_ti;
 
 void				ft_wait_setup(t_data *data);
-void				ft_wait_start(int *start);
+void				ft_wait_start(int *start, pthread_mutex_t *start_m);
 void				ft_wait_death(t_data *data);
 long				ft_get_time_ms(t_data *data);
 void				*ft_philo(void *arg);

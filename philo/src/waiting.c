@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:43:17 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/17 20:25:59 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/05 18:16:48 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,18 @@ void	ft_wait_setup(t_data *data)
 	data->is_started = 1;
 }
 
-void	ft_wait_start(int *start)
+void	ft_wait_start(int *start, pthread_mutex_t *start_m)
 {
-	while (*start == 0)
-		;
+	while (1)
+	{
+		pthread_mutex_lock(start_m);
+		if (*start == 1)
+		{
+			pthread_mutex_unlock(start_m);
+			break;
+		}
+		pthread_mutex_unlock(start_m);
+	}
 }
 
 void	ft_wait_death(t_data *data)
@@ -53,6 +61,8 @@ void	ft_wait_death(t_data *data)
 	i = 0;
 	while (data->is_started)
 	{
+		if (!data->is_started)
+			break;
 		if (data->tab_philo[i]->is_alive == 0)
 			break ;
 		else if (ft_get_time_ms(data)
