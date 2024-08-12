@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:47:51 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/07/17 20:25:31 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:44:09 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@ long	ft_get_time_ms(t_data *data)
 
 void	ft_print_routine(t_data *data, int id, const char *routine)
 {
-	pthread_mutex_lock(&data->tab_philo[id]->m_alive);
+	pthread_mutex_lock(&data->tab_philo[id]->is_alive_m);
+	pthread_mutex_lock(&data->is_started_mutex);
 	if (data->is_started)
-		printf("%ld %d %s", ft_get_time_ms(data), id+1, routine);
-	pthread_mutex_unlock(&data->tab_philo[id]->m_alive);
+		printf("%ld %d %s", ft_get_time_ms(data), id +1, routine);
+	pthread_mutex_unlock(&data->is_started_mutex);
+	pthread_mutex_unlock(&data->tab_philo[id]->is_alive_m);
 }

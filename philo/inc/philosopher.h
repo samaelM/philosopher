@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:32 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/09 14:57:59 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:54:35 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ typedef struct s_philo
 	int				id;
 	pthread_mutex_t	*tab_fork;
 	int				is_setup;
-	int				is_setup_mutex;
-	pthread_mutex_t	m_alive;
+	pthread_mutex_t	is_setup_mutex;
+	pthread_mutex_t	is_alive_m;
 	int				is_alive;
 	pthread_t		thid;
 	long			last_meal_ms;
@@ -46,6 +46,8 @@ typedef struct s_data
 	pthread_mutex_t	*tab_fork;
 	int				is_started;
 	pthread_mutex_t	is_started_mutex;
+	int				nb_finished;
+	// pthread_mutex_t	print_mmutex;
 }					t_data;
 
 typedef struct s_thread_info

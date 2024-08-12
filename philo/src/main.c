@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:36 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/05 17:44:09 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:54:51 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ static int	ft_init(t_data *data, int ac, char **av)
 	else
 		data->nb_eat_max = -1;
 	data->is_started = 0;
+	data->nb_finished = 0;
 	data->nb_philo = ft_atoi(av[1]);
 	data->time_die = ft_atoi(av[2]);
 	data->time_eat = ft_atoi(av[3]) * 1000;
@@ -71,6 +72,16 @@ void	ft_free_data(t_data *data)
 	free(data->tab_philo);
 }
 
+void ft_unlock_forks(t_data *data)
+{
+	int i = 0;
+	while (i < data->nb_philo)
+	{
+		pthread_mutex_unlock(&data->tab_fork[i]);
+		i++;
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_data	data;
@@ -80,7 +91,9 @@ int	main(int ac, char **av)
 	ft_create_threads(&data);
 	ft_wait_setup(&data);
 	ft_wait_death(&data);
+	// ft_unlock_forks(&data);
 	ft_wait_threads(&data);
 	ft_free_data(&data);
+	// printf("anaelle fin");
 	return (0);
 }
