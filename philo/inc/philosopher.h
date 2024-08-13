@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:32 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/12 16:54:35 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/13 17:55:38 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,5 @@ void				*ft_philo(void *arg);
 void				ft_wait_threads(t_data *data);
 int					ft_create_threads(t_data *data);
 void				ft_print_routine(t_data *data, int id, const char *routine);
-
+int	ft_usleep(unsigned int time, t_data *data);
 #endif

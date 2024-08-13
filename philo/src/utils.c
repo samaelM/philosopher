@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:47:51 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/12 16:44:09 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/13 18:33:45 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,13 @@ void	ft_print_routine(t_data *data, int id, const char *routine)
 		printf("%ld %d %s", ft_get_time_ms(data), id +1, routine);
 	pthread_mutex_unlock(&data->is_started_mutex);
 	pthread_mutex_unlock(&data->tab_philo[id]->is_alive_m);
+}
+
+int	ft_usleep(unsigned int time, t_data *data)
+{
+	long	start;
+	start = ft_get_time_ms(data);
+	while ((ft_get_time_ms(data) - start) < time)
+		usleep(time / 10);
+	return(0);
 }

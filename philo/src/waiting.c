@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:43:17 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/12 19:27:35 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/13 17:20:47 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,19 @@
 
 void	ft_wait_setup(t_data *data)
 {
-	// ⚠️ mettre des mutex
 	int	i;
 	int	nb_ok;
 
 	i = 0;
 	nb_ok = 0;
-	while (nb_ok < data->nb_philo)
+	while (1)
 	{
+		pthread_mutex_lock(&data->is_started_mutex);
+		if (nb_ok >= data->nb_philo)
+		{
+			pthread_mutex_unlock(&data->is_started_mutex);
+			break ;
+		}
 		if (data->tab_philo[i]->is_setup == 1)
 		{
 			data->tab_philo[i]->is_setup = 2;
@@ -31,6 +36,7 @@ void	ft_wait_setup(t_data *data)
 			i = 0;
 		else
 			i++;
+		pthread_mutex_unlock(&data->is_started_mutex);
 	}
 	pthread_mutex_lock(&data->is_started_mutex);
 	data->is_started = 1;
@@ -66,13 +72,14 @@ void	ft_wait_death(t_data *data)
 		}
 		if (ft_get_time_ms(data)
 			- data->tab_philo[i]->last_meal_ms >= data->time_die
-			&& data->tab_philo[i]->last_meal_ms != 0 && data->tab_philo[i]->is_alive)
+			&& data->tab_philo[i]->last_meal_ms != 0
+			&& data->tab_philo[i]->is_alive)
 		{
 			// printf("lm = %ld\n", data->tab_philo[i]->last_meal_ms);
 			// printf("diff = %ld\n", ft_get_time_ms(data)
-				// - data->tab_philo[i]->last_meal_ms);
+			// - data->tab_philo[i]->last_meal_ms);
 			// ft_print_routine(data, i, "died\n");
-			printf("%ld %d died\n", ft_get_time_ms(data), i+1);
+			printf("%ld %d died\n", ft_get_time_ms(data), i + 1);
 			// pthread_mutex_lock(&data->is_started_mutex);
 			data->is_started = 0;
 			// pthread_mutex_unlock(&data->is_started_mutex);

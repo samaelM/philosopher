@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:36 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/12 16:54:51 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/13 18:15:13 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ static int	ft_init(t_data *data, int ac, char **av)
 	data->nb_finished = 0;
 	data->nb_philo = ft_atoi(av[1]);
 	data->time_die = ft_atoi(av[2]);
-	data->time_eat = ft_atoi(av[3]) * 1000;
-	data->time_sleep = ft_atoi(av[4]) * 1000;
+	data->time_eat = ft_atoi(av[3]);
+	data->time_sleep = ft_atoi(av[4]);
 	if (!ft_check_data(data))
 		return (0);
 	data->tab_philo = malloc(data->nb_philo * sizeof(t_philo *));
