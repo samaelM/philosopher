@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:36 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/13 18:15:13 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/14 17:46:15 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,18 +72,10 @@ void	ft_free_data(t_data *data)
 	free(data->tab_philo);
 }
 
-void ft_unlock_forks(t_data *data)
-{
-	int i = 0;
-	while (i < data->nb_philo)
-	{
-		pthread_mutex_unlock(&data->tab_fork[i]);
-		i++;
-	}
-}
-
 int	main(int ac, char **av)
 {
+	// norme
+	// proteger les mallocs etc
 	t_data	data;
 
 	if (!ft_init(&data, ac, av))
@@ -91,9 +83,7 @@ int	main(int ac, char **av)
 	ft_create_threads(&data);
 	ft_wait_setup(&data);
 	ft_wait_death(&data);
-	// ft_unlock_forks(&data);
 	ft_wait_threads(&data);
 	ft_free_data(&data);
-	// printf("anaelle fin");
 	return (0);
 }

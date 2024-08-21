@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:32 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/13 17:55:38 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/14 16:41:20 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ typedef struct s_data
 	int				is_started;
 	pthread_mutex_t	is_started_mutex;
 	int				nb_finished;
-	// pthread_mutex_t	print_mmutex;
 }					t_data;
 
 typedef struct s_thread_info
@@ -64,5 +63,9 @@ void				*ft_philo(void *arg);
 void				ft_wait_threads(t_data *data);
 int					ft_create_threads(t_data *data);
 void				ft_print_routine(t_data *data, int id, const char *routine);
-int	ft_usleep(unsigned int time, t_data *data);
+int					ft_usleep(unsigned int time);
+int					ft_min(int a, int b);
+int					ft_max(int a, int b);
+long int			gettime(void);
+
 #endif

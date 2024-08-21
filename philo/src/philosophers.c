@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:59:28 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/13 18:15:01 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/14 18:32:24 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,19 @@ static int	ft_eat(t_data *data, int idx)
 
 	philo = data->tab_philo[idx];
 	if (philo->id & 1 && philo->nb_meal == 0)
-		ft_usleep(data->time_eat / 2, data);
-	pthread_mutex_lock(&data->tab_fork[philo->f_left]);
+		ft_usleep(data->time_eat / 2);
+	pthread_mutex_lock(&data->tab_fork[ft_min(philo->f_left, philo->f_right)]);
 	ft_print_routine(data, idx, "has taken a fork\n");
-	pthread_mutex_lock(&data->tab_fork[philo->f_right]);
+	pthread_mutex_lock(&data->tab_fork[ft_max(philo->f_left, philo->f_right)]);
 	ft_print_routine(data, idx, "has taken a fork\n");
 	pthread_mutex_lock(&data->is_started_mutex);
-	data->tab_philo[idx]->last_meal_ms = ft_get_time_ms(data);
+	data->tab_philo[idx]->last_meal_ms = gettime();
 	data->tab_philo[idx]->nb_meal++;
 	pthread_mutex_unlock(&data->is_started_mutex);
 	ft_print_routine(data, idx, "is eating\n");
-	ft_usleep(data->time_eat, data);
-	pthread_mutex_unlock(&data->tab_fork[philo->f_left]);
-	pthread_mutex_unlock(&data->tab_fork[philo->f_right]);
+	ft_usleep(data->time_eat);
+	pthread_mutex_unlock(&data->tab_fork[ft_min(philo->f_left, philo->f_right)]);
+	pthread_mutex_unlock(&data->tab_fork[ft_max(philo->f_left, philo->f_right)]);
 	return (1);
 }
 
@@ -50,8 +50,10 @@ static int	ft_philo_init(t_philo *arg)
 		philo->f_right = 0;
 	philo->have_fork = 0;
 	free(arg);
+	pthread_mutex_lock(&data->is_started_mutex);
 	philo->is_setup = 1;
 	philo->last_meal_ms = 0;
+	pthread_mutex_unlock(&data->is_started_mutex);
 	return (1);
 }
 
@@ -65,7 +67,7 @@ void	*ft_philo(void *arg)
 	ft_philo_init(arg);
 	ft_wait_start(&data->is_started, &data->is_started_mutex);
 	pthread_mutex_lock(&data->is_started_mutex);
-	philo->last_meal_ms = ft_get_time_ms(data);
+	philo->last_meal_ms = gettime();
 	pthread_mutex_unlock(&data->is_started_mutex);
 	while (1)
 	{
@@ -80,15 +82,15 @@ void	*ft_philo(void *arg)
 		ft_eat(data, philo->id);
 		if (data->nb_eat_max == philo->nb_meal)
 		{
-			printf("%ld %d WIN\n", ft_get_time_ms(data), philo->id+1);
 			pthread_mutex_lock(&data->is_started_mutex);
+			printf("%ld %d WIN\n", gettime(), philo->id+1);
 			philo->is_alive = 0;
 			data->nb_finished++;
 			pthread_mutex_unlock(&data->is_started_mutex);
 			break ;
 		}
 		ft_print_routine(data, philo->id, "is sleeping\n");
-		ft_usleep(data->time_sleep, data);
+		ft_usleep(data->time_sleep);
 	}
 	return (NULL);
 }
