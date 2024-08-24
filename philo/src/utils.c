@@ -27,12 +27,12 @@ long int	gettime(void)
 
 void	ft_print_routine(t_data *data, int id, const char *routine)
 {
-	// pthread_mutex_lock(&data->tab_philo[id]->is_alive_m);
-	pthread_mutex_lock(&data->is_started_mutex);
+	pthread_mutex_lock(&data->print_m);
+	// pthread_mutex_lock(&data->data_m);
 	if (data->is_started)
 		printf("%ld %d %s", gettime(), id + 1, routine);
-	pthread_mutex_unlock(&data->is_started_mutex);
-	// pthread_mutex_unlock(&data->tab_philo[id]->is_alive_m);
+	// pthread_mutex_unlock(&data->data_m);
+	pthread_mutex_unlock(&data->print_m);
 }
 
 int	ft_usleep(unsigned int time)

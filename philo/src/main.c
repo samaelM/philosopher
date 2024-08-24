@@ -22,7 +22,8 @@ static void	ft_init_mutex(t_data *data)
 		pthread_mutex_init(&data->tab_fork[i], NULL);
 		i++;
 	}
-	pthread_mutex_init(&data->is_started_mutex, NULL);
+	pthread_mutex_init(&data->data_m, NULL);
+	pthread_mutex_init(&data->print_m, NULL);
 }
 
 static int	ft_check_data(t_data *data)

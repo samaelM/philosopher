@@ -17,11 +17,6 @@ int	ft_ltoa_hexa_size(unsigned long long nb)
 	int	nlen;
 
 	nlen = 0;
-	if (nb < 0)
-	{
-		nlen = 1;
-		nb = -nb;
-	}
 	while (nb > 0)
 	{
 		nb /= 16;

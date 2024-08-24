@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../inc/philosopher.h"
+#include <pthread.h>
 
 void	ft_wait_setup(t_data *data)
 {
@@ -22,28 +23,30 @@ void	ft_wait_setup(t_data *data)
 	while (1)
 	{
 		// ⚠️ a enlever v
-		// usleep(1);
-		pthread_mutex_lock(&data->is_started_mutex);
+		usleep(1);
+		pthread_mutex_lock(&data->data_m);
 		if (nb_ok >= data->nb_philo)
 		{
-			pthread_mutex_unlock(&data->is_started_mutex);
+			pthread_mutex_unlock(&data->data_m);
 			break ;
 		}
+		pthread_mutex_unlock(&data->data_m);
+		pthread_mutex_lock(&data->tab_philo[i]->philo_m);
 		if (data->tab_philo[i]->is_setup == 1)
 		{
 			data->tab_philo[i]->is_setup = 2;
 			nb_ok++;
 		}
+		pthread_mutex_unlock(&data->tab_philo[i]->philo_m);
 		if (i >= data->nb_philo - 1)
 			i = 0;
 		else
 			i++;
 		// i = (i+1) % (data->nb_philo-1);
-		pthread_mutex_unlock(&data->is_started_mutex);
 	}
-	pthread_mutex_lock(&data->is_started_mutex);
+	pthread_mutex_lock(&data->data_m);
 	data->is_started = 1;
-	pthread_mutex_unlock(&data->is_started_mutex);
+	pthread_mutex_unlock(&data->data_m);
 }
 
 void	ft_wait_start(int *start, pthread_mutex_t *start_m)
@@ -51,7 +54,7 @@ void	ft_wait_start(int *start, pthread_mutex_t *start_m)
 	while (1)
 	{
 		// ⚠️ a enlever v
-		// usleep(1);
+		usleep(1);
 		pthread_mutex_lock(start_m);
 		if (*start == 1)
 		{
@@ -70,22 +73,27 @@ void	ft_wait_death(t_data *data)
 	while (1)
 	{
 		// ⚠️ a enlever v
-		// usleep(1);
-		pthread_mutex_lock(&data->is_started_mutex);
+		usleep(1);
+		pthread_mutex_lock(&data->data_m);
 		if (!data->is_started || data->nb_finished == data->nb_philo)
 		{
-			pthread_mutex_unlock(&data->is_started_mutex);
+			pthread_mutex_unlock(&data->data_m);
 			break ;
 		}
+		pthread_mutex_unlock(&data->data_m);
+		pthread_mutex_lock(&data->tab_philo[i]->philo_m);
 		if (gettime()
 			- data->tab_philo[i]->last_meal_ms >= data->time_die
 			&& data->tab_philo[i]->last_meal_ms != 0
 			&& data->tab_philo[i]->is_alive)
 		{
-			printf("%ld %d died\n", gettime(), i + 1);
+			// ft_print_routine(data,i, "died");
+			pthread_mutex_lock(&data->print_m);
 			data->is_started = 0;
+			printf("%ld %d %s", gettime(), i + 1, "died");
+			pthread_mutex_unlock(&data->print_m);
 		}
-		pthread_mutex_unlock(&data->is_started_mutex);
+		pthread_mutex_unlock(&data->tab_philo[i]->philo_m);
 		if (i == data->nb_philo - 1)
 			i = 0;
 		else
@@ -101,7 +109,7 @@ void	ft_wait_threads(t_data *data)
 	while (i < data->nb_philo)
 	{
 		// ⚠️ a enlever v
-		// usleep(1);
+		usleep(1);
 		if (pthread_join(data->tab_philo[i]->thid, NULL) != 0)
 		{
 			perror("pthread_create() error");
