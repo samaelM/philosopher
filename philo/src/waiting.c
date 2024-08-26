@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:43:17 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/16 14:11:49 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/08/26 17:23:16 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	ft_wait_setup(t_data *data)
 	pthread_mutex_unlock(&data->data_m);
 }
 
-void	ft_wait_start(int *start, pthread_mutex_t *start_m)
+int	ft_wait_start(int *start, pthread_mutex_t *start_m)
 {
 	while (1)
 	{
@@ -59,7 +59,12 @@ void	ft_wait_start(int *start, pthread_mutex_t *start_m)
 		if (*start == 1)
 		{
 			pthread_mutex_unlock(start_m);
-			break ;
+			return (1);
+		}
+		if (*start == -1)
+		{
+			pthread_mutex_unlock(start_m);
+			return (0);
 		}
 		pthread_mutex_unlock(start_m);
 	}
@@ -82,15 +87,14 @@ void	ft_wait_death(t_data *data)
 		}
 		pthread_mutex_unlock(&data->data_m);
 		pthread_mutex_lock(&data->tab_philo[i]->philo_m);
-		if (gettime()
-			- data->tab_philo[i]->last_meal_ms >= data->time_die
+		if (gettime() - data->tab_philo[i]->last_meal_ms >= data->time_die
 			&& data->tab_philo[i]->last_meal_ms != 0
 			&& data->tab_philo[i]->is_alive)
 		{
 			// ft_print_routine(data,i, "died");
 			pthread_mutex_lock(&data->print_m);
 			data->is_started = 0;
-			printf("%ld %d %s", gettime(), i + 1, "died");
+			printf("%ld %d %s", gettime(), i + 1, "died\n");
 			pthread_mutex_unlock(&data->print_m);
 		}
 		pthread_mutex_unlock(&data->tab_philo[i]->philo_m);
@@ -101,16 +105,17 @@ void	ft_wait_death(t_data *data)
 	}
 }
 
-void	ft_wait_threads(t_data *data)
+void	ft_wait_threads(t_data *data, int nb)
 {
 	int	i;
 
 	i = 0;
-	while (i < data->nb_philo)
+	while (i < nb)
 	{
 		// ⚠️ a enlever v
 		usleep(1);
-		if (pthread_join(data->tab_philo[i]->thid, NULL) != 0)
+		if (data->tab_philo[i] && pthread_join(data->tab_philo[i]->thid,
+				NULL) != 0)
 		{
 			perror("pthread_create() error");
 			exit(3);
