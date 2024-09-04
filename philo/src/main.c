@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:36 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/29 15:29:17 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/09/04 19:10:18 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,13 @@ static int	ft_nbnb(char *str)
 
 	nb = 0;
 	i = 0;
-	while (str && str[i])
+	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	while (ft_isdigit(str[i]))
 	{
-		if (ft_isdigit(str[i]))
-			nb++;
+		nb++;
 		i++;
 	}
 	return (nb);
@@ -33,6 +36,8 @@ int	is_int(char *str, int nb)
 	if (ft_nbnb(str) > 10)
 		return (0);
 	if (ft_nbnb(str) == 10 && nb < 1000000000)
+		return (0);
+	if (ft_is_neg(str))
 		return (0);
 	return (1);
 }

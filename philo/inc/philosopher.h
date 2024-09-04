@@ -6,7 +6,7 @@
 /*   By: maemaldo <maemaldo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:59:32 by maemaldo          #+#    #+#             */
-/*   Updated: 2024/08/29 15:46:43 by maemaldo         ###   ########.fr       */
+/*   Updated: 2024/09/04 19:10:00 by maemaldo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,6 @@ int					ft_check_data(t_data *data, char **av);
 int					ft_philo_init(t_philo *arg);
 int					ft_atoi(const char *str);
 int					ft_isdigit(int c);
+int					ft_is_neg(char *str);
 
 #endif
